@@ -1,7 +1,7 @@
-import './App.css';
-import Header from './component/Header';
-import Body from './component/Body';
-import Footer from './component/Footer';
+import '../App.css';
+import Header from '../component/Header';
+import Body from '../component/Body';
+import Footer from '../component/Footer';
 
 function App() { // 함수의 대문자로 시작하는 건 컴포넌트
   let list = [
