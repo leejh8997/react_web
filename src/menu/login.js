@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box, TextField, Button, Checkbox, FormControlLabel,
   Link, Typography, Avatar, IconButton, InputAdornment,
@@ -20,6 +20,25 @@ function Login() {
   const [rememberMe, setRememberMe] = useState(localStorage.getItem('savedUsername') ? true : false);
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const mainContent = document.getElementById('main-content');
+    if (mainContent) {
+      mainContent.style.backgroundImage = `url(${backgroundImage})`;
+      mainContent.style.backgroundSize = 'cover';
+      mainContent.style.backgroundPosition = 'center';
+      mainContent.style.minHeight = '100vh'; // 혹시라도 높이 부족할까봐
+    }
+
+    return () => { // 나갈 때 배경 초기화
+      if (mainContent) {
+        mainContent.style.backgroundImage = '';
+        mainContent.style.backgroundSize = '';
+        mainContent.style.backgroundPosition = '';
+        mainContent.style.minHeight = '';
+      }
+    };
+  }, []);
 
   const handleLogin = () => {
     setLoading(true);
@@ -46,10 +65,12 @@ function Login() {
     }
   };
 
+
+
   return (
     <Box
       sx={{
-        backgroundImage: `url(${backgroundImage})`,
+        // backgroundImage: `url(${backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         height: '100vh',
@@ -68,10 +89,12 @@ function Login() {
           textAlign: 'center'
         }}
       >
-        <Avatar sx={{backgroundColor: 'primary.main',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center', width: 56, height: 56, margin: '0 auto 20px' }}>
-          
+        <Avatar sx={{
+          backgroundColor: 'primary.main',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center', width: 56, height: 56, margin: '0 auto 20px'
+        }}>
+
         </Avatar>
 
         {message && (
@@ -120,7 +143,7 @@ function Login() {
           sx={{ mt: 1, mb: 2 }}
         />
 
-          {/* 소셜 로그인 아이콘들 */}
+        {/* 소셜 로그인 아이콘들 */}
         <Stack direction="row" spacing={2} justifyContent="center" mb={2}>
           <IconButton><GoogleIcon color="error" /></IconButton>
           <IconButton><FacebookIcon color="primary" /></IconButton>
