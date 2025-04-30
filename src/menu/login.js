@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box, TextField, Button, Checkbox, FormControlLabel,
   Link, Typography, Avatar, IconButton, InputAdornment,
-  Alert, CircularProgress, Stack
+  Alert, CircularProgress, Stack, Dialog, DialogTitle,
+  DialogContent, DialogActions, Card,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
@@ -14,12 +16,13 @@ import backgroundImage from '../assets/login-background.jpg'; // (경로는 네 
 import Logo from '../assets/white.png';
 
 function Login() {
-  const [username, setUsername] = useState(localStorage.getItem('savedUsername') || '');
+  const [userId, setUserId] = useState(localStorage.getItem('savedUserId') || '');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(localStorage.getItem('savedUsername') ? true : false);
+  const [rememberMe, setRememberMe] = useState(localStorage.getItem('savedUserId') ? true : false);
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const mainContent = document.getElementById('main-content');
@@ -45,17 +48,30 @@ function Login() {
     setMessage(null);
 
     setTimeout(() => { // 스피너를 보기 위해 일부러 1초 딜레이
-      if (username === 'admin' && password === '1234') {
-        setMessage({ type: 'success', text: '로그인 성공!' });
-        if (rememberMe) {
-          localStorage.setItem('savedUsername', username);
-        } else {
-          localStorage.removeItem('savedUsername');
-        }
-      } else {
-        setMessage({ type: 'error', text: '아이디 또는 비밀번호가 틀렸습니다.' });
-      }
-      setLoading(false);
+      fetch("http://localhost:3005/login", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json"
+        },
+        body: JSON.stringify({ userId, pwd: password })
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          if (data.success) {
+            setMessage({ type: 'success', text: '로그인 성공!' });
+            if (rememberMe) {
+              localStorage.setItem('savedUserId', userId);
+            } else {
+              localStorage.removeItem('savedUserId');
+            }
+            localStorage.setItem("token", data.token);
+            navigate("/feedList");
+          } else {
+            setMessage({ type: 'error', text: data.message });
+          }
+          setLoading(false);
+        })
     }, 1000);
   };
 
@@ -105,11 +121,11 @@ function Login() {
 
         <TextField
           fullWidth
-          label="Username"
+          label="UserId"
           margin="normal"
           variant="outlined"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={userId}
+          onChange={(e) => setUserId(e.target.value)}
           onKeyDown={handleKeyPress}
         />
         <TextField

@@ -9,6 +9,7 @@ function FeedAdd() {
     const navigate = useNavigate(); // 페이지 이동을 위한 함수 리턴
     const [searchParams] = useSearchParams();
     const id = searchParams.get("id");
+    const [images, setImages] = useState([]);
 
     useEffect(() => {
         if (id) {
@@ -32,8 +33,10 @@ function FeedAdd() {
         })
             .then(res => res.json())
             .then(data => {
-                if (data.result > 0) {
+                if (data.result.affectedRows > 0) {
+                    console.log(images.length);
                     alert("등록 완료");
+                    if (images.length > 0) UploadImg(data.result.insertId);
                     navigate("/feedList");
                     setUserId("");
                     setContent("");
@@ -50,14 +53,39 @@ function FeedAdd() {
         })
             .then(res => res.json())
             .then(data => {
-                if (data.result > 0) {
+                if (data.result.affectedRows > 0) {
                     alert('수정 성공');
+                    if (images.length > 0) UploadImg(data.result.insertId);
                     navigate("/feedList");
                     setUserId("");
                     setContent("");
                 }
             });
-    }
+    };
+    const imageChange = (e) => {
+        const files = e.target.files;
+        setImages(files);
+        console.log(images);
+    };
+    const UploadImg = (feedId) => {
+        const formData = new FormData();
+        formData.append('content', content);
+        formData.append('feedId', feedId);
+        const fileArray = Array.from(images); // FileList → 배열
+        fileArray.forEach(file => {
+            formData.append('photos', file);
+        });
+        fetch('http://localhost:3005/feed/upload', {
+            method: "POST",
+            body: formData, // FormData는 직접 Content-Type 지정하지 않음!
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.result == "success") {
+                    alert("이미지 등록 완료");
+                }
+            })
+    };
     return (
         <Container maxWidth="sm">
             <Typography variant="h4" gutterBottom>피드 등록</Typography>
@@ -80,6 +108,10 @@ function FeedAdd() {
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
             />
+            <Box>
+                <label>이미지 첨부:</label>
+                <input type="file" name="photos" multiple onChange={imageChange} />
+            </Box>
             <Box mt={2}>
                 {id ? <Button variant="contained" color="primary" onClick={handleEdit}>
                     수정
