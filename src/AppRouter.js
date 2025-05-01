@@ -24,6 +24,8 @@ import ReducerEx from './menu/ReducerEx';
 import ReducerEx2 from './menu/ReducerEx2';
 import FeedList from './menu/FeedList';
 import FeedAdd from './menu/FeedAdd';
+import Memo from './menu/Memo';
+import UseIdEx from './menu/UseIdEx';
 import { LoginOutlined, LoginRounded } from '@mui/icons-material';
 
 const drawerWidth = 240;
@@ -31,9 +33,11 @@ const drawerWidth = 240;
 const menuItems = [
   { text: 'FeedAdd.js', icon: <HomeIcon />, path: '/feedAdd' },
   { text: 'FeedList.js', icon: <HomeIcon />, path: '/feedList' },
-  { text: 'ReducerEx2.js', icon: <CashedIcon />, path: '/reducerEx2' },
-  { text: 'ReducerEx.js', icon: <CashedIcon />, path: '/reducerEx' },
   { text: 'Login.js', icon: <LoginOutlined />, path: '/login' },
+  { text: 'Memo.js', icon: <HomeIcon />, path: '/memo' },
+  { text: 'UseIdEx.js', icon: <HomeIcon />, path: '/useIdEx' },
+  { text: 'ReducerEx2.js', icon: <CashedIcon />, path: '/reducerEx2' },
+  { text: 'ReducerEx.js', icon: <CashedIcon />, path: '/reducerEx' }, 
   { text: 'App.js', icon: <AppsIcon />, path: '/app' },
   { text: 'State.js', icon: <ArticleIcon />, path: '/state' },
   { text: 'Effect.js', icon: <SendIcon />, path: '/effect' },
@@ -113,6 +117,8 @@ function AppRouter() {
           <Route path="/reducerEx2" element={<ReducerEx2 />} />
           <Route path="/feedList" element={<FeedList />} />
           <Route path="/feedAdd" element={<FeedAdd />} />
+          <Route path="/memo" element={<Memo />} />
+          <Route path="/useIdEx" element={<UseIdEx />} />
         </Routes>
       </Box>
     </Box>

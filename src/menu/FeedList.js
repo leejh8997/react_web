@@ -90,7 +90,7 @@ function FeedList() {
             <Button variant="contained" onClick={() => setMyFeed(!myFeed)}>{myFeed ? "전체보기" : "내꺼만"}</Button>
             {/* 최초에는 전체목록(버튼이름 : 내꺼만) */}
             {/* 버튼 클릭 시 내꺼만 나오고 버튼 이름은 전체보기 */}
-            <Divider sx={{ mb: 2 }} />
+            <Divider sx={{ mb: 2 , margin : '5px'}} />
             {feeds.map(feed => (
                 <Card key={feed.id} sx={{ mb: 2 }}>
                     <CardContent>
